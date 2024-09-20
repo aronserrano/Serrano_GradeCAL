@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <title>Serrano's Grade Calculator</title>
+    <style>
+       :root {
+    --gradient-start: #b2e1d9;      /* Soft teal color */
+    --gradient-end: #e7f6e7;        /* Light mint green */
+    --container-background: #ffffff; /* Pure white for container */
+    --padding-large: 2rem;          /* Reduced padding for a sleeker look */
+    --border-radius-large: 1rem;    /* Slightly smaller border radius */
+    --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); /* Softer shadow */
+}
+
+body {
+    display: flex;
+    justify-content: center;          /* Center content horizontally */
+    align-items: center;              /* Center content vertically */
+    height: 100vh;                    /* Full height of the viewport */
+    margin: 0;                        /* Eliminate default margin */
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); /* Soft gradient background */
+    font-family: 'Helvetica Neue', sans-serif; /* Modern font style */
+}
+
+.container {
+    text-align: center;
+    background-color: var(--container-background); /* White background */
+    padding: var(--padding-large);                  /* Uniform padding */
+    border-radius: var(--border-radius-large);      /* Smooth rounded corners */
+    box-shadow: var(--box-shadow);                  /* Subtle shadow effect */
+    transition: transform 0.3s ease-in-out;        /* Smooth transition effect */
+}
+
+.container:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+
+       :root {
+    --main-green: #4caf50;              /* Refreshing green hue */
+    --hover-green: #388e3c;             /* Darker shade for hover effects */
+    --input-width: 300px;               /* Input field width */
+    --btn-width: 320px;                 /* Button width */
+    --base-font-size: 16px;             /* Standard font size */
+    --heading-font-size: 26px;          /* Prominent heading size */
+    --output-font-size: 20px;           /* Output text size */
+    --output-text-color: #444;          /* Dark text color for output */
+}
+
+h1 {
+    color: var(--main-green);
+    margin-bottom: 1.5rem;              /* Increased space below the heading */
+    font-size: var(--heading-font-size);
+    text-align: center;
+    text-transform: uppercase;           /* Uppercase for emphasis */
+    letter-spacing: 1px;                /* Slightly increased spacing for impact */
+}
+
+input[type="text"] {
+    width: var(--input-width);
+    padding: 14px;                      /* Increased padding for comfort */
+    margin: 20px 0;                     /* More space around input */
+    border: none;
+    border-bottom: 2px solid var(--main-green);
+    border-radius: 4px;                 /* Slightly more rounded corners */
+    font-size: var(--base-font-size);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-bottom: 2px solid var(--hover-green);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow on focus */
+}
+
+button {
+    width: var(--btn-width);
+    padding: 14px;                      /* Consistent padding */
+    margin-top: 1.5rem;                 /* More space above the button */
+    border: none;
+    border-radius: 30px;                /* More pronounced rounding */
+    font-size: var(--base-font-size);
+    background-color: var(--main-green);
+    color: #ffffff;                     /* Pure white for text */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: var(--hover-green);
+    transform: translateY(-3px);       /* Slight lift for hover effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+#output {
+    margin-top: 1.5rem;
+    font-size: var(--output-font-size);
+    color: var(--output-text-color);
+    font-weight: bold;
+    text-align: center;
+    background-color: #f3f3f3;         /* Softer light background for output */
+    padding: 12px;                      /* More padding for comfort */
+    border-radius: 6px;                 /* Slightly more rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for output */
+}
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Serrano's Grade Calculator</h1>
+
+    <input type="text" id="prelim_grade" placeholder="Enter your Prelim Grade" required>
+    <button id="submit">Submit</button>
+    <div id="output"></div>
+</div>
+
+<script src="https://pyscript.net/latest/pyscript.js"></script>
+
+<py-script>
+def calculate_grades(prelim):
+    passing_grade = 75
+    max_midterm_final = 0.30 * 100 + 0.50 * 100
+    
+    if prelim >= passing_grade:
+        return "You have already passed the subject."
+    
+    required_overall_score = passing_grade - 0.20 * prelim
+    
+    if required_overall_score > max_midterm_final:
+        return "It is impossible to pass the subject with this Prelim grade."
+    
+    min_midterm_final = required_overall_score / 0.80
+    return f"Minimum Midterm and Final grades needed: {min_midterm_final:.2f}"
+
+def handle_submission(event):
+    prelim_grade_input = Element('prelim_grade').element.value  # Get the value of the input
+    output_element = Element('output')  # Access the output div
+    
+    try:
+        prelim_grade = float(prelim_grade_input)
+        if prelim_grade < 0 or prelim_grade > 100:
+            output_element.element.innerHTML = "Prelim grade must be between 0 and 100."
+        else:
+            result = calculate_grades(prelim_grade)
+            output_element.element.innerHTML = result
+    except ValueError:
+        output_element.element.innerHTML = "Please enter a valid number for Prelim grade."
+
+# Attach the event listener to the button
+Element('submit').element.onclick = handle_submission
+</py-script>
+
+</body>
+</html>
